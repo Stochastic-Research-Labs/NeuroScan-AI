@@ -1,0 +1,8 @@
+{
+  "name": "neuroscan-ai-workspace",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\\dev.ps1"
+  }
+}
