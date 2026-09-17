@@ -1,0 +1,57 @@
+{
+  "case_id": "a2b09db40632",
+  "name": "John",
+  "status": "completed",
+  "modalities_present": [
+    "t1",
+    "t1ce",
+    "t2",
+    "flair"
+  ],
+  "created_at": "2026-08-29T08:25:49.442628+00:00",
+  "has_segmentation": true,
+  "error_message": null,
+  "class_stats": [
+    {
+      "key": "ncr",
+      "label": "Necrotic Core (NCR/NET)",
+      "voxel_count": 15450,
+      "volume_cm3": 15.45,
+      "color": "#0EA5E9"
+    },
+    {
+      "key": "ed",
+      "label": "Edema (ED)",
+      "voxel_count": 42745,
+      "volume_cm3": 42.745,
+      "color": "#FACC15"
+    },
+    {
+      "key": "et",
+      "label": "Enhancing Tumor (ET)",
+      "voxel_count": 21929,
+      "volume_cm3": 21.929,
+      "color": "#EF4444"
+    },
+    {
+      "key": "wt",
+      "label": "Whole Tumor (WT)",
+      "voxel_count": 80124,
+      "volume_cm3": 80.124,
+      "color": "#22D3EE"
+    },
+    {
+      "key": "tc",
+      "label": "Tumor Core (TC)",
+      "voxel_count": 37379,
+      "volume_cm3": 37.379,
+      "color": "#F97316"
+    }
+  ],
+  "inference_time_ms": 8363.9,
+  "volume_shape": [
+    240,
+    240,
+    155
+  ]
+}
