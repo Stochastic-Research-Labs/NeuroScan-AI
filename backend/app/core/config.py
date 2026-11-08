@@ -18,9 +18,9 @@ MODEL_INPUT_SHAPE = (128, 128, 128)
 
 # BraTS label convention: 0 = background, 1 = NCR/NET, 2 = ED, 4 = ET.
 CLASS_INFO = {
-    "ncr": {"label_value": 1, "name": "Necrotic Core (NCR/NET)", "color": "#0EA5E9", "channel": 0},
+    "ncr": {"label_value": 1, "name": "Necrotic Core (NCR/NET)", "color": "#38BDF8", "channel": 0},
     "ed": {"label_value": 2, "name": "Edema (ED)", "color": "#FACC15", "channel": 1},
-    "et": {"label_value": 4, "name": "Enhancing Tumor (ET)", "color": "#EF4444", "channel": 2},
+    "et": {"label_value": 4, "name": "Enhancing Tumor (ET)", "color": "#E879F9", "channel": 2},
 }
 
 CORS_ORIGINS = [
