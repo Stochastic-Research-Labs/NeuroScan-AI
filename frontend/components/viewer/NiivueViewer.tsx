@@ -17,6 +17,7 @@ import { ClassLegend } from "./ClassLegend";
 import { ViewerControls } from "./ViewerControls";
 import type { ClassVolumeStat, Modality } from "@/lib/types";
 import { getSegmentationColormap } from "@/lib/segmentation-colors";
+import type { Niivue } from "@niivue/niivue";
 
 export type SliceType = "axial" | "coronal" | "sagittal" | "multiplanar" | "render";
 
@@ -57,6 +58,8 @@ export interface NiivueViewerProps {
   visibleRegions?: string[];
   stats?: ClassVolumeStat[];
   onToggleRegion?: (key: string) => void;
+  onReady?: (viewer: Niivue | null) => void;
+  onViewChange?: (viewer: Niivue) => void;
 }
 
 /**
@@ -86,6 +89,8 @@ export function NiivueViewer({
   visibleRegions,
   stats,
   onToggleRegion,
+  onReady,
+  onViewChange,
 }: NiivueViewerProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -106,6 +111,7 @@ export function NiivueViewer({
   // Initial mount: create the Niivue instance once.
   useEffect(() => {
     let cancelled = false;
+    let ownedViewer: Niivue | null = null;
 
     async function init() {
       try {
@@ -116,8 +122,11 @@ export function NiivueViewer({
           show3Dcrosshair: true,
           dragAndDropEnabled: false,
         });
+        ownedViewer = nv;
         await nv.attachToCanvas(canvasRef.current);
+        if (cancelled) { nv.cleanup(); return; }
         nvRef.current = nv;
+        onReady?.(nv);
         defaultDragModeRef.current = nv.opts?.dragMode ?? DRAG_MODE.crosshair;
         if (!cancelled) setNvReady(true);
       } catch (err) {
@@ -132,8 +141,11 @@ export function NiivueViewer({
     init();
     return () => {
       cancelled = true;
+      onReady?.(null);
+      ownedViewer?.cleanup();
+      nvRef.current = null;
     };
-  }, []);
+  }, [onReady]);
 
   // Reload volumes whenever the background modality or overlay visibility changes.
   // Also re-runs when nvReady flips to true, which fires the initial load after
@@ -273,6 +285,7 @@ export function NiivueViewer({
     const nextZoom = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, pan[3] * factor));
     nv.scene.pan2Dxyzmm = [pan[0], pan[1], pan[2], nextZoom];
     nv.drawScene?.();
+    onViewChange?.(nv);
   };
 
   const resetView = () => {
@@ -281,6 +294,7 @@ export function NiivueViewer({
     nv.scene.pan2Dxyzmm = [0, 0, 0, 1];
     nv.scene.crosshairPos = [0.5, 0.5, 0.5];
     nv.drawScene?.();
+    onViewChange?.(nv);
   };
 
   const togglePan = async () => {
@@ -304,14 +318,14 @@ export function NiivueViewer({
 
   useEffect(() => {
     const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
+      setIsFullscreen(document.fullscreenElement === containerRef.current);
     };
     document.addEventListener("fullscreenchange", handleFullscreenChange);
     return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
   }, []);
 
   const toolbarButton =
-    "flex h-9 w-9 items-center justify-center rounded-lg bg-black/60 text-white backdrop-blur transition-colors hover:bg-black/80 disabled:opacity-40 disabled:pointer-events-none";
+    "flex h-11 w-11 items-center justify-center rounded-lg bg-black/60 text-white backdrop-blur transition-colors hover:bg-black/80 disabled:opacity-40 disabled:pointer-events-none";
 
   return (
     <div

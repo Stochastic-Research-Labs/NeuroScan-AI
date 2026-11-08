@@ -1,6 +1,7 @@
 import type { ClassVolumeStat } from "@/lib/types";
 import { formatVolume } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
+import { TUMOR_COLORS, type TumorClassKey } from "@/lib/segmentation-colors";
 
 interface ClassLegendProps {
   stats: ClassVolumeStat[];
@@ -26,14 +27,14 @@ export function ClassLegend({ stats, visibleRegions = [], onToggleRegion }: Clas
             <button
               type="button"
               onClick={() => onToggleRegion?.(s.key)}
-              className="flex items-center gap-2.5 min-w-0 flex-1 hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm transition-opacity"
+              className="flex items-center gap-2.5 min-w-0 min-h-11 flex-1 text-left hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm transition-opacity"
               aria-pressed={isVisible}
               aria-label={`Toggle visibility of ${s.label}`}
             >
               <div className="relative flex items-center justify-center h-4 w-4 shrink-0">
                 <span
                   className="absolute inset-0 rounded-sm ring-1 ring-white/10"
-                  style={{ backgroundColor: s.color }}
+                  style={{ backgroundColor: TUMOR_COLORS[s.key as TumorClassKey] ?? s.color }}
                   aria-hidden="true"
                 />
                 {!isVisible && (
@@ -47,7 +48,7 @@ export function ClassLegend({ stats, visibleRegions = [], onToggleRegion }: Clas
                   </div>
                 )}
               </div>
-              <span className="text-text truncate">{s.label}</span>
+              <span className="text-text text-xs leading-5">{s.label}</span>
             </button>
             <span className="mono-numeric text-text-muted shrink-0">{formatVolume(s.volume_cm3)}</span>
           </li>
@@ -62,7 +63,7 @@ export function ClassLegend({ stats, visibleRegions = [], onToggleRegion }: Clas
               <span className="flex items-center gap-2.5 min-w-0 flex-1">
                 <span
                   className="h-4 w-4 shrink-0 rounded-sm ring-1 ring-white/10"
-                  style={{ backgroundColor: s.color }}
+                  style={{ backgroundColor: TUMOR_COLORS[s.key as TumorClassKey] ?? s.color }}
                   aria-hidden="true"
                 />
                 <span className="text-text-muted truncate">{s.label}</span>

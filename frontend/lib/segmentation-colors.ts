@@ -9,9 +9,9 @@
  * 3D overlay's colormap.
  */
 export const TUMOR_COLORS = {
-  ncr: "#0EA5E9",
+  ncr: "#38BDF8",
   ed: "#FACC15",
-  et: "#EF4444",
+  et: "#E879F9",
   wt: "#22D3EE",
   tc: "#F97316",
 } as const;
