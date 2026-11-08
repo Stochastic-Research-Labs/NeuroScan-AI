@@ -3,86 +3,83 @@
 @tailwind utilities;
 
 :root {
-  --bg: #f5f9fc;
-  --surface: #edf5f9;
-  --card: #ffffff;
-  --border: #d7e3ea;
-  --border-strong: #b9ccd7;
-  --text: #102a43;
-  --text-muted: #526a7a;
-
-  --primary: #006da6;
-  --primary-glow: #27a7d8;
-  --primary-foreground: #ffffff;
-
-  --success: #087c5b;
-  --warning: #a65a00;
-  --destructive: #bd2c2c;
-
-  /* Fixed segmentation class colors — never change meaning across the app */
-  --tumor-ncr: #0ea5e9; /* necrotic / non-enhancing tumor core (blue) */
-  --tumor-ed: #facc15; /* peritumoral edema */
-  --tumor-et: #ef4444; /* enhancing tumor */
+  --bg-rgb: 7 18 34;
+  --surface-rgb: 10 25 47;
+  --card-rgb: 15 32 53;
+  --border-rgb: 35 55 77;
+  --border-strong-rgb: 70 95 122;
+  --text-rgb: 239 246 255;
+  --text-muted-rgb: 164 184 207;
+  --primary-rgb: 103 232 249;
+  --bg: rgb(var(--bg-rgb));
+  --surface: rgb(var(--surface-rgb));
+  --card: rgb(var(--card-rgb));
+  --border: rgb(var(--border-rgb));
+  --border-strong: rgb(var(--border-strong-rgb));
+  --text: rgb(var(--text-rgb));
+  --text-muted: rgb(var(--text-muted-rgb));
+  --primary: rgb(var(--primary-rgb));
+  --primary-glow: #67e8f9;
+  --primary-foreground: #071222;
+  --success: #6ee7b7;
+  --warning: #fcd34d;
+  --destructive: #fb7185;
+  /* Fixed segmentation colors, matching the viewer and backend reports. */
+  --tumor-ncr: #38bdf8;
+  --tumor-ed: #facc15;
+  --tumor-et: #e879f9;
 }
-
-* {
-  border-color: var(--border);
-}
-
-html {
-  color-scheme: light;
-  scroll-padding-top: 5rem;
-}
-
+* { border-color: var(--border); }
+html { color-scheme: dark; scroll-padding-top: 5rem; }
 body {
   background-color: var(--bg);
-  background-image: linear-gradient(to bottom, rgb(255 255 255 / 0.72), transparent 20rem);
+  background-image: radial-gradient(ellipse at 80% 0%, rgb(20 70 93 / 0.16), transparent 45rem);
   color: var(--text);
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
-
-::selection {
-  background-color: var(--primary);
-  color: white;
-}
-
-/* Visible, consistent focus ring for keyboard users everywhere */
-:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--primary-glow);
-  border-radius: 6px;
-}
-
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-::-webkit-scrollbar-track {
-  background: var(--bg);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--border-strong);
-  border-radius: 8px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
-}
-
+::selection { background-color: var(--primary); color: var(--primary-foreground); }
+:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--primary-glow); border-radius: 6px; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 .clinical-grid {
-  background-image: linear-gradient(rgb(0 109 166 / 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(0 109 166 / 0.045) 1px, transparent 1px);
+  background-image: linear-gradient(rgb(103 232 249 / 0.035) 1px, transparent 1px), linear-gradient(90deg, rgb(103 232 249 / 0.035) 1px, transparent 1px);
   background-size: 28px 28px;
 }
-
-.mono-numeric {
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum";
+@layer components {
+  .eyebrow { @apply text-xs font-medium uppercase tracking-[0.18em] text-primary; }
+  .glass-panel { @apply rounded-2xl border border-border bg-card/65 shadow-card backdrop-blur-xl; }
+  .page-shell { @apply mx-auto w-full max-w-7xl px-5 py-10 sm:px-8 lg:py-14; }
 }
-
+h1, h2, h3 { text-wrap: balance; }
+button, a, input, select { touch-action: manipulation; }
+button:disabled { cursor: not-allowed; }
+.brain-stage { background: radial-gradient(ellipse at center, rgb(28 108 127 / 0.17), transparent 63%); }
+.brain-ring {
+  position: absolute; inset: 16% 9%; border: 1px solid rgb(103 232 249 / 0.12);
+  border-radius: 50%; transform: rotate(-28deg) scaleY(0.64); pointer-events: none;
+}
+.brain-ring + .brain-ring { inset: 9% 17%; transform: rotate(40deg) scaleY(0.72); }
+.brain-story { position: relative; display: flex; flex-direction: column; }
+.brain-visual { height: 400px; position: relative; order: 1; }
+.story-copy { display: contents; }
+.story-panel { position: relative; padding: 3rem 0; order: 2; }
+.story-panel:first-child { order: 0; }
+@media (max-width: 1023px) and (min-height: 600px) {
+  .brain-visual { position: sticky; top: 80px; height: 38svh; min-height: 250px; max-height: 380px; z-index: 10; background-color: var(--bg); }
+  .story-panel:not(:first-child) { min-height: 75svh; scroll-margin-top: calc(80px + 38svh); }
+  .story-panel a { scroll-margin-top: calc(100px + 38svh); }
+}
+@media (min-width: 1024px) {
+  .brain-story { display: block; }
+  .brain-visual { position: sticky; top: 80px; margin-left: 43%; width: 57%; height: calc(100svh - 96px); min-height: 500px; max-height: 1000px; }
+  .story-copy { display: block; position: relative; margin-top: calc(-1 * clamp(500px, 100svh - 96px, 1000px)); pointer-events: none; }
+  .story-panel { min-height: calc(100svh - 96px); width: 47%; display: flex; flex-direction: column; justify-content: center; padding: 4rem 0; pointer-events: auto; }
+}
+.mono-numeric { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;

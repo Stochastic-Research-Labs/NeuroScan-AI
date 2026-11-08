@@ -6,25 +6,26 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        bg: "var(--bg)",
-        surface: "var(--surface)",
-        card: "var(--card)",
+        bg: "rgb(var(--bg-rgb) / <alpha-value>)",
+        surface: "rgb(var(--surface-rgb) / <alpha-value>)",
+        card: "rgb(var(--card-rgb) / <alpha-value>)",
         border: {
-          DEFAULT: "var(--border)",
-          strong: "var(--border-strong)",
+          DEFAULT: "rgb(var(--border-rgb) / <alpha-value>)",
+          strong: "rgb(var(--border-strong-rgb) / <alpha-value>)",
         },
         text: {
-          DEFAULT: "var(--text)",
-          muted: "var(--text-muted)",
+          DEFAULT: "rgb(var(--text-rgb) / <alpha-value>)",
+          muted: "rgb(var(--text-muted-rgb) / <alpha-value>)",
         },
         primary: {
-          DEFAULT: "var(--primary)",
-          glow: "var(--primary-glow)",
+          DEFAULT: "rgb(var(--primary-rgb) / <alpha-value>)",
+          glow: "rgb(var(--primary-rgb) / <alpha-value>)",
           foreground: "var(--primary-foreground)",
         },
-        success: "var(--success)",
-        warning: "var(--warning)",
-        destructive: "var(--destructive)",
+        success: "rgb(110 231 183 / <alpha-value>)",
+        warning: "rgb(252 211 77 / <alpha-value>)",
+        destructive: "rgb(251 113 133 / <alpha-value>)",
+        accent: "rgb(232 121 249 / <alpha-value>)",
         tumor: {
           ncr: "var(--tumor-ncr)",
           ed: "var(--tumor-ed)",
@@ -34,7 +35,7 @@ const config: Config = {
       fontFamily: {
         // System fonts keep the local application fully usable without a network
         // request during build or at first render.
-        sans: ["Inter", "Segoe UI", "system-ui", "sans-serif"],
+        sans: ["var(--font-poppins)", "Segoe UI", "system-ui", "sans-serif"],
         mono: ["ui-monospace", "SFMono-Regular", "Consolas", "monospace"],
       },
       borderRadius: {
@@ -44,8 +45,8 @@ const config: Config = {
         xl: "20px",
       },
       boxShadow: {
-        glow: "0 8px 24px -10px rgb(0 109 166 / 0.55)",
-        card: "0 1px 2px 0 rgb(16 42 67 / 0.04), 0 10px 28px -20px rgb(16 42 67 / 0.22)",
+        glow: "0 0 28px -8px rgb(103 232 249 / 0.4)",
+        card: "0 16px 48px -24px rgb(0 0 0 / 0.65)",
       },
       keyframes: {
         "fade-in": {

@@ -11,7 +11,7 @@ export default function NotFound() {
       <p className="text-sm text-text-muted max-w-md">
         The page you&apos;re looking for doesn&apos;t exist, or the case may have been deleted.
       </p>
-      <ButtonLink href="/">Back to dashboard</ButtonLink>
+      <ButtonLink href="/dashboard">Back to workspace</ButtonLink>
     </div>
   );
 }
