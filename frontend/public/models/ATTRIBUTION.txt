@@ -1,0 +1,16 @@
+NeuroScan AI landing-page anatomy illustration
+
+Asset: brain.glb (unmodified download; presentation filters external structures and changes materials in memory)
+Source: https://github.com/itayinbarr/brainproject/tree/main/brain-atlas/models
+Downloaded: 2026-10-10
+Model copyright: Z-Anatomy contributors and BodyParts3D / DBCLS; additional atlas-derived structures credited by Brain Project.
+License: Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+License URL: https://creativecommons.org/licenses/by-sa/4.0/
+Full upstream provenance: https://github.com/itayinbarr/brainproject#credits--licence
+
+This model is an anatomical illustration, not a patient-specific reconstruction, model output, or clinical reference.
+Preserve this notice when redistributing brain.glb. The model's license is separate from the application code license.
+
+Draco runtime under /draco: Google Draco authors, Apache License 2.0.
+Source: https://github.com/google/draco
+License: https://www.apache.org/licenses/LICENSE-2.0

@@ -17,8 +17,8 @@ import { ViewerControls } from "@/components/viewer/ViewerControls";
 import type { SliceType } from "@/components/viewer/NiivueViewer";
 import { formatMs } from "@/lib/utils";
 
-const NiivueViewer = dynamic(
-  () => import("@/components/viewer/NiivueViewer").then((m) => m.NiivueViewer),
+const ComparisonViewer = dynamic(
+  () => import("@/components/viewer/ComparisonViewer").then((m) => m.ComparisonViewer),
   {
     ssr: false,
     loading: () => (
@@ -40,7 +40,7 @@ export function CaseDetailClient({ caseId }: { caseId: string }) {
   const [modality, setModality] = useState<Modality>("t1ce");
   const [showOverlay, setShowOverlay] = useState(true);
   const [overlayOpacity, setOverlayOpacity] = useState(0.6);
-  const [sliceType, setSliceType] = useState<SliceType>("multiplanar");
+  const [sliceType, setSliceType] = useState<SliceType>("axial");
   const [visibleRegions, setVisibleRegions] = useState<string[]>(["ncr", "ed", "et"]);
 
   const loadCase = useCallback(() => {
@@ -128,30 +128,31 @@ export function CaseDetailClient({ caseId }: { caseId: string }) {
   }
 
   const hasSegmentation = caseDetail.has_segmentation || !!prediction;
-  const segmentationUrl = hasSegmentation ? api.segmentationUrl(caseId) : null;
+  const segmentationUrl = hasSegmentation ? `${api.segmentationUrl(caseId)}${prediction ? `?revision=${prediction.inference_time_ms}` : ""}` : null;
   // Prefer a fresh in-session prediction; fall back to the stats persisted on the case
   // itself so the legend still shows after a reload without forcing a re-run.
   const stats = prediction?.class_stats ?? caseDetail.class_stats ?? [];
   const inferenceTimeMs = prediction?.inference_time_ms ?? caseDetail.inference_time_ms;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 space-y-6">
+    <div className="mx-auto max-w-[1600px] px-5 sm:px-8 py-10 space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
+          <p className="eyebrow mb-3">Study workspace / MRI analysis</p>
           <h1 className="text-2xl font-semibold text-text tracking-tight">{caseDetail.name}</h1>
           <p className="mono-numeric text-xs text-text-muted mt-1">{caseDetail.case_id}</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Button
             onClick={handleDownloadReport}
-            disabled={generatingPdf || !hasSegmentation}
+            disabled={generatingPdf || !hasSegmentation || predicting}
             title={!hasSegmentation ? "Run segmentation to generate a report" : undefined}
             className="bg-card text-text border border-border-strong hover:bg-card/80 hover:border-primary/40 h-11 px-4 inline-flex gap-2 rounded-md"
           >
             {generatingPdf ? <Spinner size={16} /> : <FileText size={16} aria-hidden="true" />}
             {generatingPdf ? "Generating report…" : "Export PDF"}
           </Button>
-          {segmentationUrl && (
+          {segmentationUrl && !predicting && (
             <a
               href={segmentationUrl}
               download="segmentation.nii.gz"
@@ -193,8 +194,9 @@ export function CaseDetailClient({ caseId }: { caseId: string }) {
         </p>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-        <NiivueViewer
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
+        <ComparisonViewer
+          processing={predicting}
           backgroundUrl={api.volumeUrl(caseId, modality)}
           backgroundName={`${MODALITY_LABELS[modality]}.nii.gz`}
           overlayUrl={segmentationUrl}
@@ -257,8 +259,14 @@ export function CaseDetailClient({ caseId }: { caseId: string }) {
               </CardContent>
             </Card>
           )}
+          <div className="rounded-xl border border-border bg-surface/60 p-5">
+            <p className="text-xs font-medium uppercase tracking-wider text-text-muted">Prediction confidence</p>
+            <p className="mt-3 text-sm font-medium">Not estimated</p>
+            <p className="mt-2 text-xs leading-6 text-text-muted">This model does not return calibrated confidence scores. Tumor volume and training Dice must not be interpreted as confidence for this case.</p>
+          </div>
         </div>
       </div>
+      <p className="rounded-xl border border-warning/20 bg-warning/5 px-5 py-4 text-xs leading-6 text-text-muted">Research use only. The current model uses a central 128³ crop and may omit peripheral anatomy. Review predictions against the original scans; this tool is not validated for clinical decisions.</p>
     </div>
   );
 }

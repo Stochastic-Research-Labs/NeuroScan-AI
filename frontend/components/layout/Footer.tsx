@@ -18,7 +18,11 @@ export function Footer() {
             </a>
           </span>
         </div>
-        <p className="mono-numeric text-xs">Author: Hamza Mustafa &middot; runs 100% locally</p>
+        <div className="text-center sm:text-right text-xs leading-relaxed space-y-1">
+          <p>Contributors: Hamza Mustafa &amp; Wajid Ali</p>
+          <p>Supervisor: Ms. Saira Ishtiaq</p>
+          <p>Runs 100% locally</p>
+        </div>
       </div>
     </footer>
   );
