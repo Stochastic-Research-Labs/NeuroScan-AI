@@ -1,0 +1,54 @@
+# NeuroScan AI — files that should never reach GitHub:
+# the raw dataset, generated build output, virtual envs, local secrets, and trained model binaries.
+
+# ---- Dataset & delivered archives (huge, and not source code) ----
+archive.zip
+NeuroScan-AI.zip
+NeuroScan-AI-Setup-Guide.docx
+~$*.docx
+~$*.doc
+~$*.md
+
+# ---- Frontend (Next.js) ----
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/*.tsbuildinfo
+frontend/next-env.d.ts
+frontend/.vercel/
+frontend/.env*.local
+
+# ---- Backend (Python / FastAPI) ----
+backend/.venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/*.egg-info/
+backend/data/
+backend/models_store/*.pt
+backend/models_store/*.pth
+backend/models_store/*.h5
+
+# ---- Training outputs (Kaggle) ----
+training/*.pt
+training/*.pth
+training/kaggle_output/
+
+# ---- OS / editor noise ----
+.DS_Store
+Thumbs.db
+*.pem
+.vscode/
+.idea/
+
+# ---- Log files ----
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+CLAUDE.md
+PLAN.md
+.gitignore
+Test Data/*
+tmp/*

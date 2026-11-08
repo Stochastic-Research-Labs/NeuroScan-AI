@@ -2,6 +2,22 @@
 
 This file orients any Claude (or human) session working in this repository. Read it before making changes.
 
+## Frontend update (October 2026)
+
+The user's immersive UI brief supersedes the older design/version notes below:
+- Next.js 16.3, React 19, Tailwind 3; Poppins is self-hosted with `next/font/local`.
+- Navy surfaces (`#071222`, `#0a192f`), cyan UI accents and glass panels.
+- `/` is the scroll-linked anatomical landing page; `/dashboard` is the case workspace.
+- React Three Fiber 9 / drei 10 render the locally licensed GLB; GSAP drives scroll
+  transitions and Framer Motion animates real pending requests. Respect reduced motion.
+- `ComparisonViewer` links two NiiVue panels. Class colors remain consistent with backend
+  reports. Confidence must say "Not estimated" unless calibrated values are actually supplied.
+- Uploads still require a non-blank name and four 3D NIfTI modalities (or one complete ZIP),
+  not 2D image slices. The frontend caps the total at 120 MB for the 128 MB proxy.
+- See README's "Immersive frontend" section for component architecture, GLB licensing,
+  model placement and checks. This UI work does not validate clinical accuracy or resolve
+  the separate ML audit's crop/fallback/provenance limitations.
+
 ## What this project is
 
 **NeuroScan AI** is a local, full-stack brain tumor **segmentation** web app built on the
@@ -66,7 +82,7 @@ Tokens live in `frontend/tailwind.config.ts` and `frontend/app/globals.css`. Sum
 - Primary accent (medical teal/cyan): `#0891B2` / glow `#22D3EE`
 - Segmentation class colors — single source of truth is `frontend/lib/segmentation-colors.ts`
   (frontend) and `backend/app/core/config.py`'s `CLASS_INFO` (backend); both must agree by value:
-  NCR/NET (necrotic core) `#0EA5E9`, ED (edema) `#FACC15`, ET (enhancing tumor) `#EF4444`, plus
+  NCR/NET (necrotic core) `#38BDF8`, ED (edema) `#FACC15`, ET (enhancing tumor) `#E879F9`, plus
   two **derived** composite volumes computed in `backend/app/services/postprocessing.py`
   (unions of the labels above, not separate model outputs): Whole Tumor (WT) `#22D3EE`, Tumor
   Core (TC) `#F97316`. The NiiVue overlay colormap, the interactive legend, and the PDF report's
