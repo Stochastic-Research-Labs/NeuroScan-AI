@@ -23,9 +23,18 @@ CLASS_INFO = {
     "et": {"label_value": 4, "name": "Enhancing Tumor (ET)", "color": "#E879F9", "channel": 2},
 }
 
+# The live Vercel frontend must be allowed to call this backend from the
+# browser once it is hosted (e.g. on Render). Extra origins can be added
+# without a code change via NEUROSCAN_CORS_ORIGINS (comma-separated).
 CORS_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "https://neuroscan-ai-wajid-ali3.vercel.app",
+    "https://neuroscan-ai-lake.vercel.app",
+] + [
+    origin.strip()
+    for origin in os.getenv("NEUROSCAN_CORS_ORIGINS", "").split(",")
+    if origin.strip()
 ]
 
 APP_VERSION = "0.1.0"

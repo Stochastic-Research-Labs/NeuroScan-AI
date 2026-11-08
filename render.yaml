@@ -1,0 +1,32 @@
+# Render Blueprint for the NeuroScan AI FastAPI backend.
+# Deploy from the Render dashboard with "New Blueprint Instance" and point it
+# at the Stochastic-Research-Labs/NeuroScan-AI repo, or create the web service
+# manually with the same settings below.
+#
+# Notes:
+# - The trained model checkpoint (backend/models_store/model.pt) is NOT in the
+#   repo by design. Without it the backend starts in demo mode and returns
+#   synthetic segmentations. Add the checkpoint to the service later if you
+#   want real inference.
+# - Render's free tier spins the service down after inactivity (first request
+#   after that is slow) and its disk is ephemeral: uploaded cases do not
+#   survive a restart or redeploy.
+# - torch is installed CPU-only first: the default pip torch wheel bundles
+#   CUDA libraries and is several GB, which the free tier cannot build.
+services:
+  - type: web
+    name: neuroscan-ai-backend
+    env: python
+    plan: free
+    rootDir: backend
+    buildCommand: >-
+      pip install --upgrade pip &&
+      pip install torch --index-url https://download.pytorch.org/whl/cpu &&
+      pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.3
+      - key: NEUROSCAN_CORS_ORIGINS
+        value: https://neuroscan-ai-wajid-ali3.vercel.app
