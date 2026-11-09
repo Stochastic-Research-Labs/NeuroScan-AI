@@ -1,5 +1,6 @@
 """Orchestrates preprocessing -> model (or demo) inference -> postprocessing -> saving results."""
 
+import os
 import time
 from pathlib import Path
 from typing import Optional
@@ -19,6 +20,35 @@ try:
     TORCH_AVAILABLE = True
 except ImportError:  # pragma: no cover - exercised when torch isn't installed yet
     TORCH_AVAILABLE = False
+
+
+def _maybe_download_checkpoint() -> None:
+    """Fetch the private checkpoint from Hugging Face if it isn't on disk.
+
+    The trained weights stay private: they live in a private Hugging Face
+    model repo (never in git) and are fetched with a token stored as a Render
+    secret environment variable. No-op unless HF_MODEL_REPO_ID and HF_TOKEN
+    are both set. A failed download only logs a warning — the backend keeps
+    running in demo mode instead of crashing.
+    """
+    if CHECKPOINT_PATH.exists():
+        return
+    repo_id = os.getenv("HF_MODEL_REPO_ID", "")
+    token = os.getenv("HF_TOKEN", "")
+    if not repo_id or not token:
+        return
+    try:
+        from huggingface_hub import hf_hub_download
+
+        hf_hub_download(
+            repo_id=repo_id,
+            filename="model.pt",
+            token=token,
+            local_dir=str(CHECKPOINT_PATH.parent),
+            local_dir_use_symlinks=False,
+        )
+    except Exception as exc:  # noqa: BLE001 - stay in demo mode on any fetch failure
+        print(f"Warning: could not download checkpoint from {repo_id}: {exc}")
 
 
 class _ModelHolder:
@@ -42,6 +72,7 @@ class _ModelHolder:
             return self._model
         self._attempted = True
 
+        _maybe_download_checkpoint()
         if not TORCH_AVAILABLE or not CHECKPOINT_PATH.exists():
             return None
 
