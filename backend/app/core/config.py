@@ -8,7 +8,13 @@ DATA_DIR = BACKEND_ROOT / "data"
 CASES_DIR = DATA_DIR / "cases"
 MODELS_STORE_DIR = BACKEND_ROOT / "models_store"
 
-CHECKPOINT_PATH = MODELS_STORE_DIR / "model.pt"
+# Checkpoint location. Defaults to models_store/model.pt in the repo; set
+# NEUROSCAN_CHECKPOINT_PATH to point at a private copy instead (e.g. a
+# Render secret file at /etc/secrets/model.pt) so the trained weights never
+# have to be committed to a public repository.
+CHECKPOINT_PATH = Path(
+    os.getenv("NEUROSCAN_CHECKPOINT_PATH", MODELS_STORE_DIR / "model.pt")
+)
 METRICS_PATH = MODELS_STORE_DIR / "metrics.json"
 
 MODALITIES = ["t1", "t1ce", "t2", "flair"]
